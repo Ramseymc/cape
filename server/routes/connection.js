@@ -16,7 +16,7 @@ const pool = mysql.createPool({
   debug: false
 });
 
-console.log(pool)
+console.log("Testing",pool)
  
 module.exports = pool; 
 

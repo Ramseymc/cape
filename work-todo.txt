@@ -1,0 +1,10 @@
+I need
+
+the database tables and data
+salesinfo and salesdata
+
+to fix the connection setup login and password so that it does no give me errors
+
+ask Wayne where i would change the settings for the sql connection? 
+Ask him for a complete database.sql for phpmyadmin 
+

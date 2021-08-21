@@ -29,7 +29,7 @@
               <template v-for="item in salesFiltered">
                 <v-list-item :key="item.id">
                   <v-list-item-content>
-                    <v-list-action v-if="showActions">
+                    <v-list-item-action v-if="showActions">
                       <v-btn :id="item.id" text @click="deleteItem($event)"
                         ><v-icon color="brown"> mdi-delete</v-icon></v-btn
                       >
@@ -48,7 +48,7 @@
                       <v-btn :id="item.id" text @click="showFiles($event)"
                         ><v-icon color="black">mdi-eye</v-icon></v-btn
                       >
-                    </v-list-action>
+                    </v-list-item-action>
                     <div style="display: flex; justify-content: flex-start">
                       <v-list-item-subtitle
                         v-text="item.block"
@@ -62,6 +62,24 @@
                       ></v-list-item-subtitle>
                       <v-list-item-subtitle
                         v-text="item.firstname"
+                      ></v-list-item-subtitle>
+                    </div>
+
+                    <!-- Person Two Details -->
+                    <div style="display: flex; justify-content: flex-start"
+                    >
+                      <v-list-item-subtitle 
+                        :v-text="''"
+                      ></v-list-item-subtitle>
+                      <v-list-item-subtitle
+                        v-text="''"
+                      ></v-list-item-subtitle>
+                      
+                      <v-list-item-subtitle
+                        v-text="item.personTwoLastName"
+                      ></v-list-item-subtitle>
+                      <v-list-item-subtitle
+                        v-text="item.personTwoFirstName"
                       ></v-list-item-subtitle>
                     </div>
 
@@ -148,6 +166,7 @@
 
 <script>
 import axios from "axios";
+let url = process.env.VUE_APP_BASEURL
 import ClientUpdate from "../components/ClientUpdate.vue";
 import ClientFiles from "../components/ClientFiles.vue";
 import SignOff from "../components/signOffOTP.vue";
@@ -172,10 +191,12 @@ export default {
       dialog: null,
       el: "#v-for-object",
       sales: [],
-      url: "",
+      // url: "",
       salesEditData: [],
       search: "",
 
+      personTwo1: "Person",
+      personTwo2: "Two",
       // client Files dialog
       clientFileDialog: false,
       clientFilesData: [],
@@ -204,7 +225,7 @@ export default {
     },
   },
   async mounted() {
-    this.url = this.$store.state.url;
+    // this.url = this.$store.state.url;
     this.initialData();
   },
   methods: {
@@ -229,7 +250,7 @@ export default {
 
       await axios({
         method: "post",
-        url: `${this.url}/sendSalesInfoEmail`,
+        url: `${url}/sendSalesInfoEmail`,
         data: data,
       })
         .then(
@@ -253,14 +274,14 @@ export default {
       };
       await axios({
         method: "post",
-        url: `${this.url}/getClientInfoForSalesInfo`,
+        url: `${url}/getClientInfoForSalesInfo`,
         data: data,
       })
         .then(
           (response) => {
-            console.log("CLIENT-SIDE: RESPONSE DATA: ", response.data);
+            console.log("CLIENT-SIDE: RESPONSE DATA: ", response.data[0]);
 
-            this.sales = response.data;
+            this.sales = response.data[0];
             this.sales.forEach((el) => {
               el.fileOTPurl = `${this.url}/uploads/${el.fileOTP}`;
               // console.log("FileId", el.fileId);
@@ -305,7 +326,7 @@ export default {
       };
       await axios({
         method: "post",
-        url: `${this.url}/deleteSalesRecord`,
+        url: `${url}/deleteSalesRecord`,
         data: data,
       })
         .then(
@@ -327,6 +348,7 @@ export default {
       this.clientFilesData = this.sales.filter((el) => {
         return el.id === parseInt(targetVal);
       });
+      console.log(  "File Dialog"    );
       this.clientFileDialog = true;
     },
     async openSignOff(event) {

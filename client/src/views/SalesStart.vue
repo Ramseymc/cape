@@ -1,150 +1,203 @@
 <template>
-  <!-- 
-          TYPE: View
-          NAME: SalesStart
-       PURPOSE: Landing Page for 'Sales'
-          DATE: July 2021
-          AUTH: Connor McLean, Wayne Bruton
- -->
   <div>
+    <v-row class="text-center">
+      <v-col cols="10" offset="1" mb-4>
+        <v-card class="mx-auto" max-width="100vw">
+          <v-img height="350" :src="flatPic"></v-img>
+
+          <v-card-title>Choose your options</v-card-title>
+
+          <v-card-text>
+            <div style="display: flex">
+              <v-autocomplete
+                style="margin-right: 8px;"
+                v-model="blockValue"
+                :items="blocks"
+                dense
+                filled
+                item-text="subsectionName"
+                label="Choose Block"
+                @change="chooseUnit"
+              ></v-autocomplete>
+              <!-- </div>
+        <div> -->
+              <v-autocomplete
+                style="margin-left: 8px;"
+                v-model="unitValue"
+                :items="items"
+                dense
+                filled
+                item-text="unitName"
+                label="Choose Unit"
+                @change="unitChosen"
+              ></v-autocomplete>
+              <v-btn
+                style="margin-left:20px;"
+                v-if="blockValue && unitValue"
+                text
+                @click="getClientInfo"
+                color="primary"
+                elevation="3"
+                large
+                outlined
+                rounded
+                >Create Sale</v-btn
+              >
+            </div>
+          </v-card-text>
+          <!-- <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              v-if="blockValue && unitValue"
+              text
+              @click="getClientInfo"
+              color="primary"
+              elevation="3"
+              large
+              outlined
+              rounded
+              >Create Sale</v-btn
+            >
+
+            <v-spacer></v-spacer>
+          </v-card-actions> -->
+          <v-divider class="mx-4"></v-divider>
+        </v-card>
+      </v-col>
+    </v-row>
     <ClientInfo
+      v-if="clientDialog"
       :blockValue="blockValue"
       :unitValue="unitValue"
       :dialog="clientDialog"
+      :planType="planType"
+      :unitId="unitId"
       @closeForm="closeClientForm"
     />
-
-    <v-card class="mx-auto" max-width="100vw">
-      <v-img height="350" :src="flatPic"></v-img>
-
-      <v-card-title>Choose your options</v-card-title>
-
-      <v-card-text>
-        <div style="display: flex">
-          <v-autocomplete
-            v-model="blockValue"
-            :items="blocks"
-            dense
-            filled
-            item-text="subsectionName"
-            label="Choose Block"
-            @change="chooseUnit"
-          ></v-autocomplete>
-        </div>
-        <div>
-          <v-autocomplete
-            v-model="unitValue"
-            :items="items"
-            dense
-            filled
-            item-text="unitName"
-            label="Choose Unit"
-          ></v-autocomplete>
-        </div>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-
-        <v-btn
-          v-if="blockValue && unitValue"
-          text
-          @click="getClientInfo"
-          color="primary"
-          elevation="3"
-          large
-          outlined
-          rounded
-          >Create Sale</v-btn
-        >
-
-        <v-spacer></v-spacer>
-      </v-card-actions>
-      <v-divider class="mx-4"></v-divider>
-    </v-card>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import ClientInfo from "../components/ClientInfo.vue";
+let url = process.env.VUE_APP_BASEURL;
 
 export default {
   name: "salesstart",
   components: {
-    ClientInfo,
+    ClientInfo
   },
   data() {
     return {
       blockValue: null, //From Dropdown
       unitValue: null,
-      flatPic: require("../assets/unfurnished-flat.jpg"),
+      unitId: null,
+      flatPic: require("../assets/flat.jpeg"),
       items: [],
       blocks: [],
       clientDialog: false,
+      planType: ""
     };
   },
   async mounted() {
     let data = {
-      id: this.$store.state.development.id,
+      id: this.$store.state.development.id
     };
     await axios({
       method: "post",
-      url: `http://localhost:3000/getblocksForOptions`,
-      data: data,
+      // method: "get",
+      url: `${url}/getblocksforoptionsA`,
+      // url: `${url}/ooo`,
+      data: data
     })
       .then(
-        (response) => {
-          console.log(response.data);
-          this.blocks = response.data;
-          console.log(response.data);
+        response => {
+          console.log("RESPONSE DATA CONNOR:", response.data);
+          this.blocks = response.data.filter(el => {
+            return el.subsectionName !== "Common Area";
+          });
+
+          console.log(this.blocks);
         },
-        (error) => {
+        error => {
           console.log("the Error", error);
         }
       )
-      .catch((e) => {
+      .catch(e => {
         console.log("THERE IS AN ERROR", e);
       });
   },
   methods: {
+    unitChosen() {
+      let unitId = this.items.filter(el => {
+        return el.unitName === this.unitValue;
+      })[0].id;
+      console.log(unitId);
+      this.unitId = unitId;
+    },
     closeClientForm(event) {
       this.clientDialog = event;
     },
-    getClientInfo() {
-      this.clientDialog = !this.clientDialog;
+    async getClientInfo() {
+      let data = {
+        unitValue: this.unitValue
+      };
+      await axios({
+        method: "post",
+        url: `${url}/getUnitPlanTypes`,
+        data: data
+      }).then(
+        response => {
+          console.log(response.data[0].unit_type);
+          this.planType = response.data[0].unit_type;
+          this.clientDialog = !this.clientDialog;
+
+          // little box saying 'Posted Successfully
+          // this.snackbar = true;
+          // close the form after completing
+          // this.closeClientInfo();
+        },
+        error => {
+          console.log(error);
+        }
+      );
     },
     async chooseUnit() {
-      let filteredData = this.blocks.filter((el) => {
+      let filteredData = this.blocks.filter(el => {
         return el.subsectionName === this.blockValue;
       });
       let data = {
         id: this.$store.state.development.id,
         subsection: filteredData[0].id,
-        subsectionName: filteredData[0].subsectionName,
+        subsectionName: filteredData[0].subsectionName
         //subsectionName:
       };
-      console.log("filteredData for getting subsectionname:", filteredData),
-        await axios({
-          method: "post",
-          url: `http://localhost:3000/getUnitsForOptions`,
-          data: data,
-        })
-          .then(
-            (response) => {
-              let filteredData = response.data.filter((el) => {
-                return el.unitName.substring(2, 1) !== ".";
-              });
-              this.items = filteredData;
-            },
-            (error) => {
-              console.log(error);
-            }
-          )
-          .catch((e) => {
-            console.log(e);
-          });
-    },
-  },
+      console.log(data);
+      console.log(process.env.VUE_APP_BASEURL);
+      // console.log("filteredData for getting subsectionname:", filteredData),
+      await axios({
+        method: "post",
+        url: `${url}/getAvailableUnits`,
+        data: data
+      })
+        .then(
+          response => {
+            let filteredData = response.data.filter(el => {
+              return el.unitName.substring(2, 1) !== ".";
+            });
+            this.items = filteredData;
+            console.log("XXXX", this.items);
+          },
+          error => {
+            console.log(error);
+          }
+        )
+        .catch(e => {
+          console.log(e);
+        });
+    }
+  }
 };
 </script>
 

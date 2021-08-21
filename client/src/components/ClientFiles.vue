@@ -22,11 +22,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="
-                      fileData[0].fileOTP !== null &&
-                      fileData[0].fileOTP !== '' &&
-                      fileData[0].fileOTP !== 'undefined'
-                    "
+                    v-if="(fileData[0].fileOTP.length) || fileData[0].fileOTP === 'undefined'"
                   >
                     <span>OTP</span>
                   </v-col>
@@ -34,11 +30,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="
-                      fileData[0].fileOTP !== null &&
-                      fileData[0].fileOTP !== '' &&
-                      fileData[0].fileOTP !== 'undefined'
-                    "
+                    v-if="(fileData[0].fileOTP.length) || fileData[0].fileOTP === 'undefined'"
                   >
                     <v-spacer></v-spacer>
                     <a
@@ -55,11 +47,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="
-                      fileData[0].fileId !== null &&
-                      fileData[0].fileId !== '' &&
-                      fileData[0].fileId !== 'undefined'
-                    "
+                    v-if="(fileData[0].fileId.length) || fileData[0].fileId === 'undefined'"                     
                   >
                     <span>ID/Passport</span>
                   </v-col>
@@ -67,11 +55,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="
-                      fileData[0].fileId !== null &&
-                      fileData[0].fileId !== '' &&
-                      fileData[0].fileId !== 'undefined'
-                    "
+                    v-if="(fileData[0].fileId.length) || fileData[0].fileId === 'undefined'"
                   >
                     <v-spacer></v-spacer>
                     <a
@@ -88,11 +72,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="
-                      fileData[0].fileBank !== null &&
-                      fileData[0].fileBank !== '' &&
-                      fileData[0].fileBank !== 'undefined'
-                    "
+                    v-if="(fileData[0].fileBank.length) || fileData[0].fileBank === 'undefined'"                   
                   >
                     <span>Bank Statement</span>
                   </v-col>
@@ -101,11 +81,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="
-                      fileData[0].fileBank !== null &&
-                      fileData[0].fileBank !== '' &&
-                      fileData[0].fileBank !== 'undefined'
-                    "
+                    v-if="(fileData[0].fileBank.length) || fileData[0].fileBank === 'undefined'"
                   >
                     <v-spacer></v-spacer>
                     <a
@@ -123,11 +99,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="
-                      fileData[0].filePaySlip !== null &&
-                      fileData[0].filePaySlip !== '' &&
-                      fileData[0].filePaySlip !== 'undefined'
-                    "
+                    v-if="(fileData[0].filePaySlip.length) || fileData[0].filePaySlip === 'undefined'"
                   >
                     <!-- <span>Payslip</span> -->
                     <span>Payslip</span>
@@ -137,11 +109,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="
-                      fileData[0].filePaySlip !== null &&
-                      fileData[0].filePaySlip !== '' &&
-                      fileData[0].filePaySlip !== 'undefined'
-                    "
+                    v-if="(fileData[0].filePaySlip.length) || fileData[0].filePaySlip === 'undefined'"
                   >
                     <li
                       v-for="(file, index) in this.arrPaySlipFiles"
@@ -164,11 +132,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="
-                      fileData[0].fileFica !== null &&
-                      fileData[0].fileFica !== '' &&
-                      fileData[0].fileFica !== 'undefined'
-                    "
+                    v-if="(fileData[0].fileFica.length) || fileData[0].fileFica === 'undefined'"
                   >
                     <span>Proof of Address</span>
                   </v-col>
@@ -178,14 +142,132 @@
                       cols="4"
                       sm="4"
                       md="4"
-                      v-if="
-                        fileData[0].fileFica !== null &&
-                        fileData[0].fileFica !== '' &&
-                        fileData[0].fileFica !== 'undefined'
-                      "
+                      v-if="(fileData[0].fileFica.length) || fileData[0].fileFica === 'undefined'"
                     >
                       <li
                         v-for="(file, index) in this.arrFicaFiles"
+                        :key="`file-${index}`"
+                      >
+                        <v-spacer></v-spacer>
+                        <a
+                          :href="`${url}${file}`"
+                          download
+                          target="_blank"
+                          style="text-decoration: none"
+                        >
+                          <v-icon color="green">mdi-file-pdf-box</v-icon>
+                        </a>
+                      </li>
+                    </v-col>
+                  </ul>
+                </v-row>
+
+                <!-- Second Person's documents -->
+                <v-row>                 
+
+                  <v-col
+                    cols="6"
+                    sm="6"
+                    md="6"
+                    v-if="(fileData[0].personTwoFileID.length) || fileData[0].personTwoFileID === 'undefined'"                     
+                  >
+                    <span>ID/Passport</span>
+                  </v-col>
+                  <v-col
+                    cols="4"
+                    sm="4"
+                    md="4"
+                    v-if="(fileData[0].personTwoFileID.length) || fileData[0].personTwoFileID === 'undefined'"
+                  >
+                    <v-spacer></v-spacer>
+                    <a
+                      :href="`${url}${fileData[0].personTwoFileID}`"
+                      download
+                      target="_blank"
+                      style="text-decoration: none"
+                    >
+                      <v-icon color="green">mdi-file-pdf-box</v-icon>
+                    </a>
+                  </v-col>
+
+                  <v-col
+                    cols="6"
+                    sm="6"
+                    md="6"
+                    v-if="(fileData[0].personTwoFileBank.length) || fileData[0].personTwoFileBank === 'undefined'"                   
+                  >
+                    <span>Bank Statement</span>
+                  </v-col>
+
+                  <v-col
+                    cols="4"
+                    sm="4"
+                    md="4"
+                    v-if="(fileData[0].personTwoFileBank.length) || fileData[0].personTwoFileBank === 'undefined'"
+                  >
+                    <v-spacer></v-spacer>
+                    <a
+                      :href="`${url}${fileData[0].personTwoFileBank}`"
+                      download
+                      target="_blank"
+                      style="text-decoration: none"
+                    >
+                      <v-icon color="green">mdi-file-pdf-box</v-icon>
+                    </a>
+                  </v-col>
+
+                  <!-- PaySlip -->
+                  <v-col
+                    cols="6"
+                    sm="6"
+                    md="6"
+                    v-if="(fileData[0].personTwoFilePayslip.length) || fileData[0].personTwoFilePayslip === 'undefined'"
+                  >
+                    <!-- <span>Payslip</span> -->
+                    <span>Payslip</span>
+                  </v-col>
+
+                  <v-col
+                    cols="4"
+                    sm="4"
+                    md="4"
+                    v-if="(fileData[0].personTwoFilePayslip.length) || fileData[0].personTwoFilePayslip === 'undefined'"
+                  >
+                    <li
+                      v-for="(file, index) in this.arrPersonTwoFilePayslip"
+                      :key="`file-${index}`"
+                    >
+                      <v-spacer></v-spacer>
+                      <a
+                        :href="`${url}${file}`"
+                        download
+                        target="_blank"
+                        style="text-decoration: none"
+                      >
+                        <v-icon color="green">mdi-file-pdf-box</v-icon>
+                      </a>
+                    </li>
+                  </v-col>
+
+                  <!-- FICA -->
+                  <v-col
+                    cols="6"
+                    sm="6"
+                    md="6"
+                    v-if="(fileData[0].personTwoFileFica.length) || fileData[0].personTwoFileFica === 'undefined'"
+                  >
+                    <span>Proof of Address</span>
+                  </v-col>
+
+                  <ul>
+                    <v-col
+                      cols="4"
+                      sm="4"
+                      md="4"
+                      v-if="(fileData[0].personTwoFileFica.length) || fileData[0].personTwoFileFica === 'undefined'"
+                    >
+                      <li
+                        v-for="(file, index) in this.arrPersonTwoFileFica"
                         :key="`file-${index}`"
                       >
                         <v-spacer></v-spacer>
@@ -217,6 +299,7 @@
 </template>
 
 <script>
+let url = process.env.VUE_APP_BASEURL;
 // import axios from "axios";
 export default {
   name: "clientfiles",
@@ -229,9 +312,11 @@ export default {
     return {
       snackbar: false,
       snackBarmessage: "Successfully Posted!!",
-      url: "",
+     // url: "",
       arrFicaFiles: [],
       arrPaySlipFiles: [],
+      arrPersonTwoFilePayslip: [],
+      arrPersonTwoFileFica: [],
     };
   },
   methods: {
@@ -240,7 +325,7 @@ export default {
     },
   },
   mounted() {
-    this.url = `${process.env.VUE_APP_BASEURL}/uploads/`;
+    this.url = `${url}/uploads/`;
 
     //THIS A THOUGHT - THEN POPULATE NTO A LOOP (YOU MAY NEED A FEW ANCHOR TAGS)
     let ficaSplit = this.fileData[0].fileFica;

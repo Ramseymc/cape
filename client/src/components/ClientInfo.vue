@@ -375,6 +375,69 @@
                   <v-col cols="12">
                     <hr color="red" />
                   </v-col>
+
+                  <v-col
+                    cols="3"
+                    sm="3"
+                    style="background-color: lightgoldenrodyellow;">
+
+                    <v-switch
+                      v-model="cashDeal"
+                    
+                      :label="cashDeal ? 'Cash Deal' : 'Bonded'"
+                    ></v-switch>
+                  </v-col>
+                  <v-col
+                    cols="3"
+                    sm="3"
+                    style="background-color: lightgoldenrodyellow;">
+                    
+                    <label v-if="(cashDeal)"> <b> Balance </b> </label>
+
+                    <label v-if="!(cashDeal)"> <b> Bond Amount Required </b> </label>
+                    <v-text-field
+                      v-model="balanceRem"
+                      type="number"
+                      value="0"
+                      
+                      :label="cashDeal ? Balance : BondAmountRequired"
+                      required                      
+                    ></v-text-field>
+
+                  </v-col>
+
+                  <v-col
+                    cols="3"
+                    sm="3"
+                    style="background-color: lightgoldenrodyellow;">
+                    <strong><b>Deposit</b></strong>
+                    <v-text-field
+                      v-model="deposit"
+                      type="number"
+                      value="0"
+                      
+                      label="Deposit"
+                      required
+                      @change="changePricing"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="3"
+                    sm="3"
+                    style="background-color: lightgoldenrodyellow;">
+                    <strong><b>Deposit Date Paid</b></strong>
+                    <v-text-field
+                      v-model="depositDate"
+                      type="date"
+                      value="0"
+                      
+                      label="Deposit Date"
+                      required
+                    ></v-text-field>
+
+                  </v-col>
+                  
+                  <!-- second row -->
                   <v-col
                     cols="3"
                     sm="3"
@@ -408,7 +471,7 @@
                       readonly
                     ></v-text-field>
                   </v-col>
-                  <v-col
+                  <!-- <v-col
                     cols="3"
                     sm="3"
                     style="background-color: lightgoldenrodyellow;"
@@ -418,10 +481,10 @@
                       label="Deductions"
                       readonly
                     ></v-text-field>
-                  </v-col>
+                  </v-col> -->
                   <v-col
-                    cols="6"
-                    sm="6"
+                    cols="3"
+                    sm="3"
                     style="background-color: lightgoldenrodyellow;"
                   >
                     <v-text-field
@@ -430,16 +493,17 @@
                       readonly
                     ></v-text-field>
                   </v-col>
+
                   <v-col
-                    cols="6"
-                    sm="6"
+                    cols="3"
+                    sm="3"
                     style="background-color: lightgoldenrodyellow;"
                   >
-                    <v-btn @click="changePricing">ReCalc</v-btn>
+                    <v-btn @click="changePricing">ReCalc</v-btn>                    
                   </v-col>
                   <v-col
-                    cols="4"
-                    sm="4"
+                    cols="3"
+                    sm="3"
                     style="background-color: lightgoldenrodyellow;"
                   >
                     <strong><b>Mood</b></strong>
@@ -458,8 +522,8 @@
                     <small>*indicates required field</small>
                   </v-col>
                   <v-col
-                    cols="4"
-                    sm="4"
+                    cols="6"
+                    sm="6"
                     style="background-color: lightgoldenrodyellow;"
                   >
                     <strong><b>Flooring</b></strong>
@@ -476,6 +540,7 @@
                       ></v-radio>
                     </v-radio-group>
                   </v-col>
+
                   <v-col
                     cols="4"
                     sm="4"
@@ -489,12 +554,13 @@
                         :label="plan"
                         color="black"
                         :value="plan"
+                        @change="changePriceIfEnclosed"
                       ></v-radio>
                     </v-radio-group>
                   </v-col>
                   <v-col
-                    cols="3"
-                    sm="3"
+                    cols="4"
+                    sm="4"
                     style="background-color: lightgoldenrodyellow;"
                   >
                     <strong><b>Parking</b></strong>
@@ -502,35 +568,39 @@
                       v-model="parkingNumber"
                       type="number"
                       value="0"
+                      min="0"
+                      max="4"
                       label="Additional Parking"
                       required
                       @change="changePricing"
                     ></v-text-field>
                   </v-col>
                   <v-col
-                    cols="3"
-                    sm="3"
+                    cols="4"
+                    sm="4"
                     style="background-color: lightgoldenrodyellow;"
                   >
                     <strong><b>Bay N0:</b></strong>
                     <v-text-field label="Bay Number"></v-text-field>
                   </v-col>
-                  <v-col
+                  <!-- <v-col
                     cols="3"
                     sm="3"
                     style="background-color: lightgoldenrodyellow;"
                   >
-                    <strong><b>Extras</b></strong>
+                     <strong><b>Extras</b></strong>
                     <v-text-field
                       v-model="extras"
                       type="number"
                       value="0"
+                      
                       label="Extras"
                       required
                       @change="changePricing"
                     ></v-text-field>
-                  </v-col>
-                  <v-col
+                  </v-col> -->
+
+                  <!-- <v-col
                     cols="3"
                     sm="3"
                     style="background-color: lightgoldenrodyellow;"
@@ -544,7 +614,61 @@
                       required
                       @change="changePricing"
                     ></v-text-field>
+                  </v-col> -->
+
+                  <!-- row end -->
+                  <v-col
+                    cols="3"
+                    sm="3"
+                    style="background-color: lightgoldenrodyellow;">
+
+                    <v-switch
+                      v-model="gasStove"
+                    
+                      :label="gasStove ? 'Gas Stove' : 'Standard Stove'"
+                    ></v-switch>
                   </v-col>
+
+                  <v-col
+                    cols="2"
+                    sm="2"
+                    style="background-color: lightgoldenrodyellow;">
+                    <strong><b>Beds: {{this.beds}}</b></strong>
+                    <!-- <v-text-field
+                      v-model="beds"
+                      type="number"
+                      value="0"
+                      min="0"
+                      max="4"
+                      label="Beds"
+                      required
+                      @change="changePricing"
+                    ></v-text-field> -->
+                  </v-col>
+                  <v-col
+                    cols="2"
+                    sm="2"
+                    style="background-color: lightgoldenrodyellow;">
+                    <strong><b>Bath: {{this.bath}}</b></strong>
+                    <!-- <v-text-field
+                      v-model="bath"
+                      type="number"
+                      value="0"
+                      min="0"
+                      max="4"
+                      label="Bath"
+                      required
+                      @change="changePricing"
+                    ></v-text-field> -->
+                  </v-col>
+                  <v-col
+                    cols="5"
+                    sm="5"
+                    style="background-color: lightgoldenrodyellow;">
+                    
+                  </v-col>  
+                  <!-- row end -->
+
                   <v-col
                     cols="12"
                     sm="12"
@@ -568,7 +692,8 @@
                       persistent-hint
                     ></v-file-input>
                   </v-col>
-                  <v-col cols="12" sm="12">
+                  <v-col cols="12" sm="12"
+                  >
                     <v-file-input
                       v-model="fileId"
                       label="Upload ID/Passport Photo"
@@ -760,6 +885,7 @@ import axios from "axios";
 import VuePhoneNumberInput from "vue-phone-number-input";
 import "vue-phone-number-input/dist/vue-phone-number-input.css";
 let url = process.env.VUE_APP_BASEURL;
+
 export default {
   name: "salesstart",
   components: {
@@ -776,6 +902,18 @@ export default {
 
   data() {
     return {
+      beds: "",
+      bath: "",
+      balanceRem: "",
+      deposit: "",
+      depositDate: "",
+
+      BondAmountRequired: "",
+      Balance: "",
+
+      gasStove: false,
+      cashDeal: false,
+
       contractPrice: 0,
       contractPriceStr: "",
       basePrice: 0,
@@ -788,6 +926,7 @@ export default {
       extrasStr: "",
       deductions: 0,
       deductionsStr: "",
+      notes: "",
 
       marital: "Not married",
       firstNameLabel: "First Name*",
@@ -807,14 +946,32 @@ export default {
       residentialAddress: "",
       mood: "Mood1",
       flooring: "Laminate",
-      floorplan: "Plan A",
+      floorplan: "",
       plans: [],
       fileOTP: null,
       fileId: null,
       fileBank: null,
       filePaySlip: null,
       fileFica: null,
-      url: "",
+      salesAgent: "",
+      salesAgentPhone: "",
+      personTwoFirstName: "",
+      personTwoLastName: "",
+      personTwoIDNumber: "",
+      personTwoEmail: "", 
+      personTwoBankName: "", 
+      personTwoAccountNumber: "", 
+      personTwoAccountType: "", 
+      personTwoFileID: null,
+      personTwoFileBank: null, 
+      personTwoFilePaySlip: null, 
+      personTwoFileFica: null,
+      personTwoMarital: "", 
+      personTwoMobile: "", 
+      personTwoLandline: "", 
+      personTwoPostalAddress: "", 
+      personTwoResidentialAddress: "",
+      //url: "",
       mobile: {
         countryCode: "ZA",
         isValid: false,
@@ -831,9 +988,11 @@ export default {
   //   console.log("AWESOME AWESOMENESS",this.planType)
   // },
   async mounted() {
+    // planType is undefined 
     this.plans = this.planType.split(",");
+    console.log("platype=",this.planType);
     this.floorplan = this.planType[0];
-    console.log("AWESOME AWESOMENESS", this.planType);
+    console.log("AWESOME AWESOMENESS planType = ", this.planType);
     let data = {
       unit: this.unitId,
     };
@@ -849,6 +1008,9 @@ export default {
         this.parking = response.data[0].parking;
         this.extras = response.data[0].extras;
         this.deductions = response.data[0].deductions;
+
+        this.beds = response.data[0].beds;
+        this.bath = response.data[0].bath;
 
         this.deductionsStr = this.convertToString(this.deductions);
         this.basePriceStr = this.convertToString(this.basePrice);
@@ -868,6 +1030,9 @@ export default {
   },
 
   methods: {
+    changePriceIfEnclosed() {
+      console.log("Check if selected floorplan is one including an enclosed balcony, if so, increase the price of extras and contract_price accordingly")
+    },
     changePricing() {
       this.parking = parseFloat(this.parkingNumber) * parseFloat(this.parkingPrice);
       this.deductionsStr = this.convertToString(this.deductions);
@@ -987,7 +1152,7 @@ export default {
       formData.append("personTwoFirstName", this.personTwoFirstName);
       formData.append("personTwoLastName", this.personTwoLastName);
       formData.append("personTwoIDNumber", this.personTwoIDNumber);
-      formData.append("personTwoMaritial", this.personTwoMaritial);
+      formData.append("personTwoMarital", this.personTwoMarital);
       formData.append("personTwoEmail", this.personTwoEmail);
       formData.append("personTwoBankName", this.personTwoBankName);
       formData.append("personTwoAccountNumber", this.personTwoAccountNumber);
@@ -1020,27 +1185,24 @@ export default {
       formData.append("salesAgentPhone", this.salesAgentPhone);
 
       // append the saleType from (person)
-
       formData.append("contains", contains);
-       formData.append("contract_price", this.contractPrice);
-      // contractPrice: 0,      
-      // contractPriceStr: "",
 
+      formData.append("contract_price", this.contractPrice);
       formData.append("base_price", this.basePrice);
-      // basePrice: 0,    
-      // basePriceStr: "",
-     
-      // parkingNumber: 0,
       formData.append("parking", this.parking);
-      // parking: 0,     
-      // parkingPrice: 25000,    
-      // parkingPriceStr: "",
-
-      formData.append("extras", this.extras);
-      // extras: 0,
-      // extrasStr: "",
-
+      formData.append("extras", this.extras);    
       formData.append("deductions", this.deductions);
+      formData.append("notes", this.notes);
+
+      formData.append("cashDeal", this.cashDeal);
+      formData.append("balanceRem", this.balanceRem);
+
+      formData.append("deposit", this.deposit);
+      formData.append("depositDate", this.depositDate);
+      formData.append("gasStove", this.gasStove);
+
+      // formdata append enclosedBalcony - how?
+
       console.log("files:", files);
       console.log("contains:", contains);
 

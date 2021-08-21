@@ -13,6 +13,7 @@ const fileFilter = function (req, file, cb) {
     error.code = "LIMIT_FILE_TYPES";
     console.log(req.path, error);
     return cb(error, false);
+
   }
   cb(null, true);
 };
@@ -34,9 +35,11 @@ router.get("/test", (req, res) => {
 
 // get blocks for development
 router.post("/getblocksForOptions", (req, res) => {
+  console.log(req.body)
   let mysql = `select * from subsection where development = ${req.body.id}`;
   pool.getConnection(function (err, connection) {
     if (err) {
+      console.log("XXXXXX", err)//
       connection.release();
       resizeBy.send("Error with connection");
     }
@@ -72,10 +75,10 @@ router.post("/getSalesDataForSale", (req, res) => {
   });
 })
 
-
 router.post("/getUnitPlanTypes", (req, res) => {
   console.log(req.body)
   let mysql = `select unit_type from salesData s, units u where u.id = s.unit and u.unitName = '${req.body.unitValue}'`
+  console.log("req.body.unitValue= ", req.body.unitValue);
   pool.getConnection(function (err, connection) {
     if (err) {
       connection.release();
@@ -92,11 +95,6 @@ router.post("/getUnitPlanTypes", (req, res) => {
     connection.release();
   });
 })
-
-
-
-
-
 
 router.post("/getAvailableUnits", (req,res) =>{
   console.log(req.body) // this is the only changed method the rest are new
@@ -121,7 +119,6 @@ router.post("/getAvailableUnits", (req,res) =>{
 
 })
 
-
 // get avail units for selected development and block
 router.post("/getUnitsForOptions", (req, res) => {
   // let mysql = `SELECT 
@@ -137,12 +134,13 @@ router.post("/getUnitsForOptions", (req, res) => {
   //       WHERE s.subsectionName = '${req.body.subsectionName}' ) 
   //   AND s.subsectionName = '${req.body.subsectionName}';`;
   console.log(req.body)
-    let mysql = `select s.unit, u.unitName from salesData s, units u where u.id = s.unit and u.subsection = ${req.body.subsection} and s.sold = false and s.development = ${req.body.development}`
+    let mysql = `select s.unit, u.unitName from salesData s, units u where u.id = s.unit and u.subsection = ${req.body.subsection} and s.sold = false and s.development = ${req.body.id}`
 
   console.log("Hello",mysql);
   pool.getConnection(function (err, connection) {
     if (err) {
       connection.release();
+      //
       resizeBy.send("Error with connection");
     }
     connection.query(mysql, function (error, result) {
@@ -159,8 +157,11 @@ router.post("/getUnitsForOptions", (req, res) => {
 //
 // get all valid salesInfo
 router.post("/getClientInfoForSalesInfo", (req, res) => {
-  let mysql = `select si.*, sd.parking, sd.bay_no, sd.extras, sd.deductions, sd.contract_price, sd.base_price, sd.sold, sd.actualsale_date from salesinfo si join units u on si.unit = u.unitName join salesdata sd on sd.unit = u.id where si.id > 0 and si.firstName > '' ;`
-  //console.log("SERVER-SIDE getting data for salesinfo", mysql);
+  let mysql = 'CALL getAllSalesInfo();'
+  
+  // let mysql = `select si.*, sd.parking, sd.bay_no, sd.extras, sd.deductions, sd.contract_price, sd.base_price, sd.sold, sd.actualsale_date, sd.unit_type, sd.notes, sd.beds, sd.bath from salesinfo si join units u on si.unit = u.unitName join salesdata sd on sd.unit = u.id where si.id > 0 and si.firstName > '' ;`
+  console.log("SERVER-SIDE getting data for salesinfo", mysql);
+  console.log(mysql);
   pool.getConnection(function (err, connection) {
     if (err) {
       connection.release();
@@ -172,7 +173,7 @@ router.post("/getClientInfoForSalesInfo", (req, res) => {
 
       } else {
         console.log("SERVER-SIDE, RESULT in salesRoutes.js", result)
-        res.json(result);
+        res.json(result);        
       }
     });
     connection.release();
@@ -384,8 +385,35 @@ router.post("/updateClient", upload.array("documents"), (req, res) => {
        salesAgent='${req.body.salesAgent}',
        salesAgentPhone='${req.body.salesAgentPhone}',
 
+       personTwoFirstName='${req.body.personTwoFirstName}',
+       personTwoLastName='${req.body.personTwoLastName}',
+       personTwoIDNumber='${req.body.personTwoIDNumber}',
+       personTwoEmail='${req.body.personTwoEmail}',
+       personTwoBankName='${req.body.personTwoBankName}',
+       personTwoAccountNumber='${req.body.personTwoAccountNumber}',
+       personTwoAccountType='${req.body.personTwoAccountType}',
+       personTwoMobile='${req.body.personTwoMobile}',
+       personTwoLandline='${req.body.personTwoLandline}',
+       personTwoPostalAddress='${req.body.personTwoPostalAddress}',
+       personTwoResidentialAddress='${req.body.personTwoResidentialAddress}',
+
+       salePerson='${req.body.salePerson}',
+       saleBuyers='${req.body.saleBuyers}',
+       saleType='${req.body.saleType}',
+
+       balanceRem='${req.body.balanceRem}',
+       deposit='${req.body.deposit}',
+       depositDate='${req.body.depositDate}',
+       gasStove='${req.body.gasStove}'
+    
+       
+
        `
-      // add twoPerson fields 
+      //enclosedBalcony='${req.body.enclosedBalcony}'
+
+       //  personTwoFirstName, personTwoLastName, personTwoIDNumber, personTwoEmail, personTwoBankName, personTwoAccountNumber, personTwoAccountType, personTwoFileID, personTwoFileBank, personTwoFilePaySlip, personTwoFileFica, personTwoMobile, personTwoLandline, personTwoPostalAddress, personTwoResidentialAddress, salePerson, saleBuyers, saleType, cashDeal, balanceRem, deposit, depositDate, gasStove
+
+      // add twoPerson fields - after database import - 
 
       // add pricing fields from salesdata to be updated as well 
       // what kind of sql is to be written for the contract_price, extras, deductions, parking 
@@ -554,8 +582,10 @@ router.post("/createClient", upload.array("documents"), (req, res) => {
     // req.files[mainIndex]
     // req.files.forEach((el2) => {
     //another 5 loops (maybe more if multi)
-
+    console.log("FILES::: ", req.files[mainIndex])
     // el2.filenameA = `${el2.filename}.${el2.mimetype.split("/")[1]}`
+    if (req.files[mainIndex] !== "undefined") {
+      console.log("FILES AFTER CHECK::: ", req.files[mainIndex])
     let insert = {
       fileType: el,
       fileName: `${req.files[mainIndex].filename}.${
@@ -564,8 +594,9 @@ router.post("/createClient", upload.array("documents"), (req, res) => {
       originalName: req.files[mainIndex].filename,
     };
     fileDetails.push(insert);
+    }
   });
-
+// 
   console.log("fileDetails", fileDetails);
 
 
@@ -705,23 +736,14 @@ router.post("/createClient", upload.array("documents"), (req, res) => {
     today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
   var dateTime = date + " " + time;
 
-  let mysql = `INSERT INTO salesinfo (firstname, lastname, iDNumber, marital, email, bankName, accountNumber, accountType, block, unit, mood, flooring, fileOTP, fileId, fileBank, filePaySlip, fileFica, dateCreated, floorplan, mobile, landline, postalAddress, residentialAddress, salesAgent, salesAgentPhone, personTwoFirstName, personTwoLastName, personTwoIDNumber, personTwoEmail, personTwoBankName, personTwoAccountNumber, personTwoAccountType, personTwoFileID, personTwoFileBank, personTwoFilePaySlip, personTwoFileFica, personTwoMobile, personTwoLandline, personTwoPostalAddress, personTwoResidentialAddress, salePerson, saleBuyers, saleType, salesAgent, salesAgentPhone) VALUES (
-                '${req.body.firstName}','${req.body.lastName}','${req.body.iDNumber}', '${req.body.marital}','${req.body.email}','${req.body.bankName}','${req.body.accountNumber}','${req.body.accountType}','${req.body.block}','${req.body.unit}','${req.body.mood}','${req.body.flooring}','${fileOTP}','${fileId}', '${fileBank}','${filePaySlip}','${fileFica}','${dateTime}','${req.body.floorplan}','${req.body.mobile}','${req.body.landline}','${req.body.postalAddress}','${req.body.residentialAddress}','${req.body.salesAgent}','${req.body.salesAgentPhone}', '${req.body.personTwoFirstName}' , '${req.body.personTwoLastName}' , '${req.body.personTwoIDNumber}' , '${req.body.personTwoEmail}' , '${req.body.personTwoBankName}', '${req.body.personTwoAccountNumber}', '${req.body.personTwoAccountType}', ${personTwoFileID}, ${personTwoFilePaySlip}, ${personTwoFileFica}, '${req.body.personTwoMobile}', '${req.body.personTwoLandline}', '${req.body.personTwoPostalAddress}', '${req.body.personTwoResidentialAddress}', '${req.body.salePerson}', '${req.body.saleBuyers}', '${req.body.saleType}','${req.body.salesAgent}','${req.body.salesAgentPhone}';
+  let mysql = `INSERT INTO salesinfo 
+  (firstname, lastname, iDNumber, marital, email, bankName, accountNumber, accountType, block, unit, mood, flooring, fileOTP, fileId, fileBank, filePaySlip, fileFica, dateCreated, floorplan, mobile, landline, postalAddress, residentialAddress, salesAgent, salesAgentPhone, personTwoFirstName, personTwoLastName, personTwoIDNumber, personTwoMarital, personTwoEmail, personTwoBankName, personTwoAccountNumber, personTwoAccountType, personTwoFileID, personTwoFileBank, personTwoFilePaySlip, personTwoFileFica, personTwoMobile, personTwoLandline, personTwoPostalAddress, personTwoResidentialAddress, salePerson, saleBuyers, saleType, cashDeal, balanceRem, deposit, depositDate, gasStove) VALUES (
+                '${req.body.firstName}','${req.body.lastName}','${req.body.iDNumber}', '${req.body.marital}','${req.body.email}','${req.body.bankName}','${req.body.accountNumber}','${req.body.accountType}','${req.body.block}','${req.body.unit}','${req.body.mood}','${req.body.flooring}','${fileOTP}','${fileId}', '${fileBank}','${filePaySlip}','${fileFica}','${dateTime}','${req.body.floorplan}','${req.body.mobile}','${req.body.landline}','${req.body.postalAddress}','${req.body.residentialAddress}','${req.body.salesAgent}','${req.body.salesAgentPhone}', '${req.body.personTwoFirstName}' , '${req.body.personTwoLastName}' , '${req.body.personTwoIDNumber}' , '${req.body.personTwoMarital}', '${req.body.personTwoEmail}' , '${req.body.personTwoBankName}', '${req.body.personTwoAccountNumber}', '${req.body.personTwoAccountType}', '${personTwoFileID}', '${personTwoFileBank}', '${personTwoFilePaySlip}', '${personTwoFileFica}', '${req.body.personTwoMobile}', '${req.body.personTwoLandline}', '${req.body.personTwoPostalAddress}', '${req.body.personTwoResidentialAddress}', '${req.body.salePerson}', '${req.body.saleBuyers}', '${req.body.saleType}', '${req.body.cashDeal}', '${req.body.balanceRem}', '${req.body.deposit}', '${req.body.depositDate}' , '${req.body.gasStove}');
 
            UPDATE salesdata sd 
-             INNER JOIN units u ON sd.unit = u.id 
-           SET
-            sd.base_price = ${parseFloat(req.body.base_price)},
-            sd.contract_price = ${parseFloat(req.body.contract_price)}, 
-            sd.parking = ${parseFloat(req.body.parking)}, 
-            sd.extras = '${parseFloat(req.body.extras)}', 
-            sd.deductions = '${parseFloat(req.body.deductions)}', 
-            sd.sold = 1, 
-            sd.actualsale_date = '${dateTime}'                        
-           WHERE u.unitName = '${req.body.unit}'
-      )`;
+             INNER JOIN units u ON sd.unit = u.id     SET     sd.base_price = ${parseFloat(req.body.base_price)},    sd.contract_price = ${parseFloat(req.body.contract_price)}, sd.parking = ${parseFloat(req.body.parking)}, sd.extras = '${parseFloat(req.body.extras)}', sd.deductions = '${parseFloat(req.body.deductions)}', sd.sold = 1,  sd.actualsale_date = '${dateTime}' , sd.notes = '${req.body.notes}' WHERE u.unitName = '${req.body.unit}'`;
 
-
+  
 
   console.log(chalk.red(mysql));
 
@@ -737,6 +759,29 @@ router.post("/createClient", upload.array("documents"), (req, res) => {
         res.json(result);
         console.log("After INSERT stmnt");
         console.log(result);
+      }
+    });
+    connection.release();
+  });
+});
+
+
+router.post("/getblocksforoptionsA", (req,res) => {
+  console.log("Awesome")
+  // res.json({awesome: "It Works"})
+    console.log("TESTING")
+  let mysql = `select * from subsection where subsectionName not like 'Common Area' and  development = ${req.body.id}`;
+  pool.getConnection(function (err, connection) {
+    if (err) {
+      connection.release();
+      resizeBy.send("Error with connection");
+    }
+    connection.query(mysql, function (error, result) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(result);
+        res.json(result);
       }
     });
     connection.release();
