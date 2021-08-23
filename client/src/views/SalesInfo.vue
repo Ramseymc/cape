@@ -29,7 +29,7 @@
               <template v-for="item in salesFiltered">
                 <v-list-item :key="item.id">
                   <v-list-item-content>
-                    <v-list-item-action v-if="showActions">
+                    <v-list-item v-if="showActions">
                       <v-btn :id="item.id" text @click="deleteItem($event)"
                         ><v-icon color="brown"> mdi-delete</v-icon></v-btn
                       >
@@ -48,7 +48,7 @@
                       <v-btn :id="item.id" text @click="showFiles($event)"
                         ><v-icon color="black">mdi-eye</v-icon></v-btn
                       >
-                    </v-list-item-action>
+                    </v-list-item>
                     <div style="display: flex; justify-content: flex-start">
                       <v-list-item-subtitle
                         v-text="item.block"

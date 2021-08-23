@@ -119,6 +119,43 @@ router.post("/getAvailableUnits", (req,res) =>{
 
 })
 
+
+// get avail units for selected development and block
+router.post("/getInvestmentData", (req, res) => {
+  // let mysql = `SELECT 
+  //     u.unitName 
+  //   FROM units u 
+  //   LEFT JOIN subsection s ON s.id = u.subsection 
+  //   LEFT JOIN salesinfo si ON si.unit = u.unitName AND si.block = s.subsectionName 
+  //   WHERE u.unitName NOT IN 
+  //     ( SELECT 
+  //       u.unitName 
+  //       FROM units u JOIN subsection s ON s.id = u.subsection 
+  //       JOIN salesinfo si ON si.unit = u.unitName AND si.block = s.subsectionName 
+  //       WHERE s.subsectionName = '${req.body.subsectionName}' ) 
+  //   AND s.subsectionName = '${req.body.subsectionName}';`;
+  console.log(req.body)
+    let mysql = `select * from investorDetails i where i.unit = ${req.body.unit};`
+
+  console.log("Hello",mysql);
+  pool.getConnection(function (err, connection) {
+    if (err) {
+      connection.release();
+      //
+      resizeBy.send("Error with connection");
+    }
+    connection.query(mysql, function (error, result) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(result)
+        res.json(result);
+      }
+    });
+    connection.release();
+  });
+});
+
 // get avail units for selected development and block
 router.post("/getUnitsForOptions", (req, res) => {
   // let mysql = `SELECT 
@@ -157,11 +194,9 @@ router.post("/getUnitsForOptions", (req, res) => {
 //
 // get all valid salesInfo
 router.post("/getClientInfoForSalesInfo", (req, res) => {
-  let mysql = 'CALL getAllSalesInfo();'
-  
-  // let mysql = `select si.*, sd.parking, sd.bay_no, sd.extras, sd.deductions, sd.contract_price, sd.base_price, sd.sold, sd.actualsale_date, sd.unit_type, sd.notes, sd.beds, sd.bath from salesinfo si join units u on si.unit = u.unitName join salesdata sd on sd.unit = u.id where si.id > 0 and si.firstName > '' ;`
-  console.log("SERVER-SIDE getting data for salesinfo", mysql);
-  console.log(mysql);
+  let mysql = 'CALL spSalesInfoR1();'
+   console.log("SERVER-SIDE getting data for salesinfo", mysql);
+  // hello
   pool.getConnection(function (err, connection) {
     if (err) {
       connection.release();
@@ -406,9 +441,8 @@ router.post("/updateClient", upload.array("documents"), (req, res) => {
        depositDate='${req.body.depositDate}',
        gasStove='${req.body.gasStove}'
     
-       
 
-       `
+      `;
       //enclosedBalcony='${req.body.enclosedBalcony}'
 
        //  personTwoFirstName, personTwoLastName, personTwoIDNumber, personTwoEmail, personTwoBankName, personTwoAccountNumber, personTwoAccountType, personTwoFileID, personTwoFileBank, personTwoFilePaySlip, personTwoFileFica, personTwoMobile, personTwoLandline, personTwoPostalAddress, personTwoResidentialAddress, salePerson, saleBuyers, saleType, cashDeal, balanceRem, deposit, depositDate, gasStove
@@ -543,8 +577,9 @@ router.post("/updateClient", upload.array("documents"), (req, res) => {
     additionalSQL = `${additionalSQL}, personTwoFilePaySlip = '${insertTwoPersonArrayPaySlip.join(",")}'`
   }
   // dynamic inserts for files, done 
+  let mysqlSalesData = ` UPDATE  sd  SET  sd.base_price = ${parseFloat(req.body.base_price)},    sd.contract_price = ${parseFloat(req.body.contract_price)}, sd.parking = ${parseFloat(req.body.parking)}, sd.extras = '${parseFloat(req.body.extras)}', sd.deductions = '${parseFloat(req.body.deductions)}', sd.sold = 1,  sd.actualsale_date = '${dateTime}' , sd.notes = '${req.body.notes}' FROM salesdata sd INNER JOIN units u ON sd.unit = u.id WHERE u.unitName = '${req.body.unit};'`
 
-  mysql = `${mysql} ${additionalSQL} WHERE id = ${req.body.id}`
+  mysql = `${mysql} ${additionalSQL} WHERE id = ${req.body.id} ; ${mysqlSalesData}`
   console.log(chalk.red("FINALmySQL UPDATE Satement, in salesRoutes.js = ", mysql));
 
   pool.getConnection(function (err, connection) {

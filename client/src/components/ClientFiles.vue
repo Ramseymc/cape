@@ -22,7 +22,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].fileOTP.length) || fileData[0].fileOTP === 'undefined'"
+                    v-if="fileData[0].fileOTP !== 'undefined' && fileData[0].fileOTP.length > 0 && fileData[0].fileOTP !== null"
                   >
                     <span>OTP</span>
                   </v-col>
@@ -30,7 +30,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="(fileData[0].fileOTP.length) || fileData[0].fileOTP === 'undefined'"
+                    v-if="fileData[0].fileOTP !== 'undefined' && fileData[0].fileOTP.length > 0 && fileData[0].fileOTP !== null"
                   >
                     <v-spacer></v-spacer>
                     <a
@@ -47,7 +47,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].fileId.length) || fileData[0].fileId === 'undefined'"                     
+                    v-if="(fileData[0].fileId.length > 0) && fileData[0].fileId !== 'undefined' && fileData[0].fileId !== null"                     
                   >
                     <span>ID/Passport</span>
                   </v-col>
@@ -55,7 +55,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="(fileData[0].fileId.length) || fileData[0].fileId === 'undefined'"
+                    v-if="(fileData[0].fileId.length > 0) && fileData[0].fileId !== 'undefined' && fileData[0].fileId !== null"
                   >
                     <v-spacer></v-spacer>
                     <a
@@ -72,7 +72,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].fileBank.length) || fileData[0].fileBank === 'undefined'"                   
+                    v-if="(fileData[0].fileBank.length > 0) && fileData[0].fileBank !== 'undefined' && fileData[0].fileBank !== null"                   
                   >
                     <span>Bank Statement</span>
                   </v-col>
@@ -81,7 +81,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="(fileData[0].fileBank.length) || fileData[0].fileBank === 'undefined'"
+                    v-if="(fileData[0].fileBank.length > 0) && fileData[0].fileBank !== 'undefined' && fileData[0].fileBank !== null"
                   >
                     <v-spacer></v-spacer>
                     <a
@@ -99,7 +99,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].filePaySlip.length) || fileData[0].filePaySlip === 'undefined'"
+                    v-if="(fileData[0].filePaySlip.length > 0) && fileData[0].filePaySlip !== 'undefined' && fileData[0].filePaySlip !== null"
                   >
                     <!-- <span>Payslip</span> -->
                     <span>Payslip</span>
@@ -109,7 +109,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="(fileData[0].filePaySlip.length) || fileData[0].filePaySlip === 'undefined'"
+                    v-if="(fileData[0].filePaySlip.length > 0) && fileData[0].filePaySlip !== 'undefined' && fileData[0].filePaySlip !== null"
                   >
                     <li
                       v-for="(file, index) in this.arrPaySlipFiles"
@@ -132,7 +132,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].fileFica.length) || fileData[0].fileFica === 'undefined'"
+                    v-if="(fileData[0].fileFica.length > 0) && fileData[0].fileFica !== 'undefined' && fileData[0].fileFica !== null"
                   >
                     <span>Proof of Address</span>
                   </v-col>
@@ -142,7 +142,7 @@
                       cols="4"
                       sm="4"
                       md="4"
-                      v-if="(fileData[0].fileFica.length) || fileData[0].fileFica === 'undefined'"
+                      v-if="(fileData[0].fileFica.length > 0) && fileData[0].fileFica !== 'undefined' && fileData[0].fileFica !== null "
                     >
                       <li
                         v-for="(file, index) in this.arrFicaFiles"
@@ -150,6 +150,7 @@
                       >
                         <v-spacer></v-spacer>
                         <a
+                          v-if="file !== undefined"
                           :href="`${url}${file}`"
                           download
                           target="_blank"
@@ -163,13 +164,13 @@
                 </v-row>
 
                 <!-- Second Person's documents -->
-                <v-row>                 
+                <!-- <v-row>                 
 
                   <v-col
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].personTwoFileID.length) || fileData[0].personTwoFileID === 'undefined'"                     
+                    v-if="(fileData[0].personTwoFileID.length) || fileData[0].personTwoFileID !== undefined"                     
                   >
                     <span>ID/Passport</span>
                   </v-col>
@@ -177,7 +178,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="(fileData[0].personTwoFileID.length) || fileData[0].personTwoFileID === 'undefined'"
+                    v-if="(fileData[0].personTwoFileID.length) || fileData[0].personTwoFileID !== undefined"
                   >
                     <v-spacer></v-spacer>
                     <a
@@ -194,7 +195,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].personTwoFileBank.length) || fileData[0].personTwoFileBank === 'undefined'"                   
+                    v-if="(fileData[0].personTwoFileBank.length) || fileData[0].personTwoFileBank !== undefined"                   
                   >
                     <span>Bank Statement</span>
                   </v-col>
@@ -203,7 +204,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="(fileData[0].personTwoFileBank.length) || fileData[0].personTwoFileBank === 'undefined'"
+                    v-if="(fileData[0].personTwoFileBank.length) || fileData[0].personTwoFileBank !== undefined"
                   >
                     <v-spacer></v-spacer>
                     <a
@@ -216,14 +217,14 @@
                     </a>
                   </v-col>
 
-                  <!-- PaySlip -->
+                
                   <v-col
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].personTwoFilePayslip.length) || fileData[0].personTwoFilePayslip === 'undefined'"
+                    v-if="(fileData[0].personTwoFilePayslip.length) || fileData[0].personTwoFilePayslip !== undefined"
                   >
-                    <!-- <span>Payslip</span> -->
+                    
                     <span>Payslip</span>
                   </v-col>
 
@@ -231,10 +232,10 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="(fileData[0].personTwoFilePayslip.length) || fileData[0].personTwoFilePayslip === 'undefined'"
+                    v-if="(fileData[0].personTwoFilePayslip.length) || fileData[0].personTwoFilePayslip !== undefined"
                   >
-                    <li
-                      v-for="(file, index) in this.arrPersonTwoFilePayslip"
+                    <li 
+                      v-for="(file, index) in arrPersonTwoFilePayslip"
                       :key="`file-${index}`"
                     >
                       <v-spacer></v-spacer>
@@ -249,12 +250,12 @@
                     </li>
                   </v-col>
 
-                  <!-- FICA -->
+                 
                   <v-col
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].personTwoFileFica.length) || fileData[0].personTwoFileFica === 'undefined'"
+                    v-if="(fileData[0].personTwoFileFica.length) || fileData[0].personTwoFileFica !== undefined"
                   >
                     <span>Proof of Address</span>
                   </v-col>
@@ -264,7 +265,7 @@
                       cols="4"
                       sm="4"
                       md="4"
-                      v-if="(fileData[0].personTwoFileFica.length) || fileData[0].personTwoFileFica === 'undefined'"
+                      v-if="(fileData[0].personTwoFileFica.length) || fileData[0].personTwoFileFica !== undefined"
                     >
                       <li
                         v-for="(file, index) in this.arrPersonTwoFileFica"
@@ -282,7 +283,7 @@
                       </li>
                     </v-col>
                   </ul>
-                </v-row>
+                </v-row> -->
               </v-container>
             </v-card-text>
             <v-card-actions>
@@ -312,7 +313,7 @@ export default {
     return {
       snackbar: false,
       snackBarmessage: "Successfully Posted!!",
-     // url: "",
+     url2: "",
       arrFicaFiles: [],
       arrPaySlipFiles: [],
       arrPersonTwoFilePayslip: [],
@@ -326,7 +327,7 @@ export default {
   },
   mounted() {
     this.url = `${url}/uploads/`;
-
+    console.log("THIS FILEDATE[0]", this.fileData[0])
     //THIS A THOUGHT - THEN POPULATE NTO A LOOP (YOU MAY NEED A FEW ANCHOR TAGS)
     let ficaSplit = this.fileData[0].fileFica;
     try {
@@ -343,6 +344,24 @@ export default {
       this.arrPaySlipFiles = Array.from(new Set(this.arrPaySlipFiles)); // removes duplicates
     } catch {
       this.arrPaySlipFiles.push(this.fileData[0].filePaySlip);
+      console.log("Cannot split this item, pushing single file");
+    }
+
+    let twoPersonFicaSplit = this.fileData[0].personTwoFileFica;
+    try {
+      this.arrPersonTwoFileFica = twoPersonFicaSplit.split(","); // set local array
+      this.arrPersonTwoFileFica = Array.from(new Set(this.arrPersonTwoFileFica)); // removes duplicates
+    } catch {
+      this.arrPersonTwoFileFica.push(this.fileData[0].personTwoFileFica);
+      console.log("Cannot split this item, pushing single file");
+    }
+
+    let twoPersonPaySlipSplit = this.fileData[0].personTwoFilePayslip;
+    try {
+      this.arrPersonTwoFilePayslip = twoPersonPaySlipSplit.split(","); // set local array
+      this.arrPersonTwoFilePayslip = Array.from(new Set(this.arrPersonTwoFilePayslip)); // removes duplicates
+    } catch {
+      this.arrPersonTwoFilePayslip.push(this.fileData[0].personTwoFilePayslip);
       console.log("Cannot split this item, pushing single file");
     }
 

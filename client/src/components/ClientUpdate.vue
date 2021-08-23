@@ -664,10 +664,34 @@
                     ></v-text-field> -->
                   </v-col>
                   <v-col
-                    cols="5"
-                    sm="5"
+                    cols="2"
+                    sm="2"
                     style="background-color: lightgoldenrodyellow;">
-                    
+                    <strong><b>Garden Size:</b></strong>
+                    <v-text-field
+                      v-model="gardenSize"
+                      type="number"
+                      value="0"
+                      min="0"
+                      max="4"
+                      label="Garden Size"
+                      required
+       
+                    ></v-text-field>
+                  </v-col>  
+                  <v-col
+                    cols="3"
+                    sm="3"
+                    style="background-color: lightgoldenrodyellow;">
+                    <strong><b>Garden Number:</b></strong>
+                    <v-text-field
+                      v-model="gardenNumber"
+                      type="text"
+                      
+                      label="Garden Number"
+                      required
+            
+                    ></v-text-field>
                   </v-col>  
 
                   <v-col
@@ -914,6 +938,8 @@ export default {
     return {
       snackbar: false,
       snackBarmessage: "Successfully Updated!!",
+      gardenSize: "",
+      gardenNumber: "",
       //url: "",
       fileOPT: null,
       fileId: null,
