@@ -57,7 +57,9 @@ router.post("/getblocksForOptions", (req, res) => {
 });
 
 router.post("/getSalesDataForSale", (req, res) => {
-  let mysql = `select * from salesData where unit = ${req.body.unit}`
+  let mysql1 = `select * from salesData where unit = ${req.body.unit}`
+  let mysql2 = `select * from balconyinfo`
+  let mysql = `${mysql1};${mysql2}`
   pool.getConnection(function (err, connection) {
     if (err) {
       connection.release();

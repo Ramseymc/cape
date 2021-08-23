@@ -22,7 +22,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="fileData[0].fileOTP !== 'undefined' && fileData[0].fileOTP.length > 0 && fileData[0].fileOTP !== null"
+                    v-if="fileData[0].fileOTP !== 'undefined' && (fileData[0].fileOTP.length > 0 && fileData[0].fileOTP !== null)"
                   >
                     <span>OTP</span>
                   </v-col>
@@ -30,7 +30,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="fileData[0].fileOTP !== 'undefined' && fileData[0].fileOTP.length > 0 && fileData[0].fileOTP !== null"
+                    v-if="fileData[0].fileOTP !== 'undefined' && (fileData[0].fileOTP.length > 0 && fileData[0].fileOTP !== null)"
                   >
                     <v-spacer></v-spacer>
                     <a
@@ -72,7 +72,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].fileBank.length > 0) && fileData[0].fileBank !== 'undefined' && fileData[0].fileBank !== null"                   
+                    v-if="(fileData[0].fileBank.length > 0) && (fileData[0].fileBank !== 'undefined' && fileData[0].fileBank !== null)"                   
                   >
                     <span>Bank Statement</span>
                   </v-col>
@@ -81,7 +81,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="(fileData[0].fileBank.length > 0) && fileData[0].fileBank !== 'undefined' && fileData[0].fileBank !== null"
+                    v-if="(fileData[0].fileBank.length > 0) && (fileData[0].fileBank !== 'undefined' && fileData[0].fileBank !== null)"
                   >
                     <v-spacer></v-spacer>
                     <a
@@ -99,7 +99,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].filePaySlip.length > 0) && fileData[0].filePaySlip !== 'undefined' && fileData[0].filePaySlip !== null"
+                    v-if="fileData[0].filePaySlip.length > 0 && fileData[0].filePaySlip !== 'undefined' && fileData[0].filePaySlip !== null"
                   >
                     <!-- <span>Payslip</span> -->
                     <span>Payslip</span>
@@ -109,7 +109,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="(fileData[0].filePaySlip.length > 0) && fileData[0].filePaySlip !== 'undefined' && fileData[0].filePaySlip !== null"
+                    v-if="fileData[0].filePaySlip.length > 0 && fileData[0].filePaySlip !== 'undefined' && fileData[0].filePaySlip !== null"
                   >
                     <li
                       v-for="(file, index) in this.arrPaySlipFiles"
@@ -142,7 +142,7 @@
                       cols="4"
                       sm="4"
                       md="4"
-                      v-if="(fileData[0].fileFica.length > 0) && fileData[0].fileFica !== 'undefined' && fileData[0].fileFica !== null "
+                      v-if="(fileData[0].fileFica.length > 0) && (fileData[0].fileFica !== 'undefined' && fileData[0].fileFica !== null)"
                     >
                       <li
                         v-for="(file, index) in this.arrFicaFiles"
@@ -164,13 +164,13 @@
                 </v-row>
 
                 <!-- Second Person's documents -->
-                <!-- <v-row>                 
+                <v-row>                 
 
                   <v-col
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].personTwoFileID.length) || fileData[0].personTwoFileID !== undefined"                     
+                    v-if="(fileData[0].personTwoFileID) && (fileData[0].personTwoFileID.length > 0 || fileData[0].personTwoFileID !== 'undefined')"                     
                   >
                     <span>ID/Passport</span>
                   </v-col>
@@ -178,7 +178,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="(fileData[0].personTwoFileID.length) || fileData[0].personTwoFileID !== undefined"
+                    v-if="(fileData[0].personTwoFileID) && (fileData[0].personTwoFileID.length > 0) && fileData[0].personTwoFileID !== 'undefined'"
                   >
                     <v-spacer></v-spacer>
                     <a
@@ -195,7 +195,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].personTwoFileBank.length) || fileData[0].personTwoFileBank !== undefined"                   
+                    v-if="(fileData[0].personTwoFileBank) && (fileData[0].personTwoFileBank.length > 0 && fileData[0].personTwoFileBank !== 'undefined')"                   
                   >
                     <span>Bank Statement</span>
                   </v-col>
@@ -204,7 +204,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="(fileData[0].personTwoFileBank.length) || fileData[0].personTwoFileBank !== undefined"
+                    v-if="(fileData[0].personTwoFileBank) && (fileData[0].personTwoFileBank.length > 0 && fileData[0].personTwoFileBank !== 'undefined')" 
                   >
                     <v-spacer></v-spacer>
                     <a
@@ -222,7 +222,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].personTwoFilePayslip.length) || fileData[0].personTwoFilePayslip !== undefined"
+                    v-if="fileData[0].personTwoFilePayslip && fileData[0].personTwoFilePayslip.length > 0 && fileData[0].personTwoFilePayslip !== 'undefined'"
                   >
                     
                     <span>Payslip</span>
@@ -232,7 +232,7 @@
                     cols="4"
                     sm="4"
                     md="4"
-                    v-if="(fileData[0].personTwoFilePayslip.length) || fileData[0].personTwoFilePayslip !== undefined"
+                    v-if="fileData[0].personTwoFilePayslip && fileData[0].personTwoFilePayslip.length > 0 && fileData[0].personTwoFilePayslip !== 'undefined'"
                   >
                     <li 
                       v-for="(file, index) in arrPersonTwoFilePayslip"
@@ -255,7 +255,7 @@
                     cols="6"
                     sm="6"
                     md="6"
-                    v-if="(fileData[0].personTwoFileFica.length) || fileData[0].personTwoFileFica !== undefined"
+                    v-if="(fileData[0].personTwoFileFica) && (fileData[0].personTwoFileFica.length > 0 && fileData[0].personTwoFileFica !== 'undefined')"
                   >
                     <span>Proof of Address</span>
                   </v-col>
@@ -265,7 +265,7 @@
                       cols="4"
                       sm="4"
                       md="4"
-                      v-if="(fileData[0].personTwoFileFica.length) || fileData[0].personTwoFileFica !== undefined"
+                      v-if="(fileData[0].personTwoFileFica) && (fileData[0].personTwoFileFica.length > 0 && fileData[0].personTwoFileFica !== 'undefined')"
                     >
                       <li
                         v-for="(file, index) in this.arrPersonTwoFileFica"
@@ -283,7 +283,7 @@
                       </li>
                     </v-col>
                   </ul>
-                </v-row> -->
+                </v-row>
               </v-container>
             </v-card-text>
             <v-card-actions>
