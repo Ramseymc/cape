@@ -54,11 +54,12 @@ router.post("/getblocksForOptions", (req, res) => {
     });
     connection.release();
   });
-});
+}); 
 
 router.post("/getSalesDataForSale", (req, res) => {
   let mysql1 = `select * from salesData where unit = ${req.body.unit}`
-  let mysql2 = `select * from balconyinfo`
+  let mysql2 = ` select * from balconyinfo`
+  // work men :) only needed from create
   let mysql = `${mysql1};${mysql2}`
   pool.getConnection(function (err, connection) {
     if (err) {
@@ -219,7 +220,10 @@ router.post("/getClientInfoForSalesInfo", (req, res) => {
 
 // delete salesinfo record matching 'id'
 router.post("/deleteSalesRecord", (req, res) => {
-  let mysql = `delete from salesinfo where id = ${req.body.id}; update salesdata inner join units on units.id = salesdata.unit set sold = 0, extras = 0, deductions = 0, parking = 0, contract)price = base_price WHERE units.unitName = '${req.body.unit}' ;`
+  //console.log("THE BODY OF THE DELETE", req.body)
+  // 
+  let mysql = `delete from salesinfo where id = ${req.body.id}; update salesdata inner join units on units.id = salesdata.unit set sold = 0, extras = 0, deductions = 0, parking = 0, contract_price = base_price WHERE units.unitName = '${req.body.unit}' ;`
+  console.log("Delete SQL", mysql);
   pool.getConnection(function (err, connection) {
     if (err) {
       connection.release();
@@ -441,7 +445,12 @@ router.post("/updateClient", upload.array("documents"), (req, res) => {
        balanceRem='${req.body.balanceRem}',
        deposit='${req.body.deposit}',
        depositDate='${req.body.depositDate}',
-       gasStove='${req.body.gasStove}'
+       gasStove='${req.body.gasStove}',
+       notes='${req.body.notes}',
+       enclosedBalcony='${req.body.enclosedBalcony}',
+       spareRoom='${req.body.spareRoom}',
+       additionalExtras='${req.body.additionalExtras}',
+       additionalExtrasCost='${req.body.additionalExtrasCost}'
     
 
       `;
@@ -774,8 +783,8 @@ router.post("/createClient", upload.array("documents"), (req, res) => {
   var dateTime = date + " " + time;
 
   let mysql = `INSERT INTO salesinfo 
-  (firstname, lastname, iDNumber, marital, email, bankName, accountNumber, accountType, block, unit, mood, flooring, fileOTP, fileId, fileBank, filePaySlip, fileFica, dateCreated, floorplan, mobile, landline, postalAddress, residentialAddress, salesAgent, salesAgentPhone, personTwoFirstName, personTwoLastName, personTwoIDNumber, personTwoMarital, personTwoEmail, personTwoBankName, personTwoAccountNumber, personTwoAccountType, personTwoFileID, personTwoFileBank, personTwoFilePaySlip, personTwoFileFica, personTwoMobile, personTwoLandline, personTwoPostalAddress, personTwoResidentialAddress, salePerson, saleBuyers, saleType, cashDeal, balanceRem, deposit, depositDate, gasStove) VALUES (
-                '${req.body.firstName}','${req.body.lastName}','${req.body.iDNumber}', '${req.body.marital}','${req.body.email}','${req.body.bankName}','${req.body.accountNumber}','${req.body.accountType}','${req.body.block}','${req.body.unit}','${req.body.mood}','${req.body.flooring}','${fileOTP}','${fileId}', '${fileBank}','${filePaySlip}','${fileFica}','${dateTime}','${req.body.floorplan}','${req.body.mobile}','${req.body.landline}','${req.body.postalAddress}','${req.body.residentialAddress}','${req.body.salesAgent}','${req.body.salesAgentPhone}', '${req.body.personTwoFirstName}' , '${req.body.personTwoLastName}' , '${req.body.personTwoIDNumber}' , '${req.body.personTwoMarital}', '${req.body.personTwoEmail}' , '${req.body.personTwoBankName}', '${req.body.personTwoAccountNumber}', '${req.body.personTwoAccountType}', '${personTwoFileID}', '${personTwoFileBank}', '${personTwoFilePaySlip}', '${personTwoFileFica}', '${req.body.personTwoMobile}', '${req.body.personTwoLandline}', '${req.body.personTwoPostalAddress}', '${req.body.personTwoResidentialAddress}', '${req.body.salePerson}', '${req.body.saleBuyers}', '${req.body.saleType}', '${req.body.cashDeal}', '${req.body.balanceRem}', '${req.body.deposit}', '${req.body.depositDate}' , '${req.body.gasStove}');
+  (firstname, lastname, iDNumber, marital, email, bankName, accountNumber, accountType, block, unit, mood, flooring, fileOTP, fileId, fileBank, filePaySlip, fileFica, dateCreated, floorplan, mobile, landline, postalAddress, residentialAddress, salesAgent, salesAgentPhone, personTwoFirstName, personTwoLastName, personTwoIDNumber, personTwoMarital, personTwoEmail, personTwoBankName, personTwoAccountNumber, personTwoAccountType, personTwoFileID, personTwoFileBank, personTwoFilePaySlip, personTwoFileFica, personTwoMobile, personTwoLandline, personTwoPostalAddress, personTwoResidentialAddress, salePerson, saleBuyers, saleType, cashDeal, balanceRem, deposit, depositDate, gasStove, spareRoom, additionalExtras, additionalExtrasCost, bayNo ) VALUES (
+                '${req.body.firstName}','${req.body.lastName}','${req.body.iDNumber}', '${req.body.marital}','${req.body.email}','${req.body.bankName}','${req.body.accountNumber}','${req.body.accountType}','${req.body.block}','${req.body.unit}','${req.body.mood}','${req.body.flooring}','${fileOTP}','${fileId}', '${fileBank}','${filePaySlip}','${fileFica}','${dateTime}','${req.body.floorplan}','${req.body.mobile}','${req.body.landline}','${req.body.postalAddress}','${req.body.residentialAddress}','${req.body.salesAgent}','${req.body.salesAgentPhone}', '${req.body.personTwoFirstName}' , '${req.body.personTwoLastName}' , '${req.body.personTwoIDNumber}' , '${req.body.personTwoMarital}', '${req.body.personTwoEmail}' , '${req.body.personTwoBankName}', '${req.body.personTwoAccountNumber}', '${req.body.personTwoAccountType}', '${personTwoFileID}', '${personTwoFileBank}', '${personTwoFilePaySlip}', '${personTwoFileFica}', '${req.body.personTwoMobile}', '${req.body.personTwoLandline}', '${req.body.personTwoPostalAddress}', '${req.body.personTwoResidentialAddress}', '${req.body.salePerson}', '${req.body.saleBuyers}', '${req.body.saleType}', '${req.body.cashDeal}', '${req.body.balanceRem}', '${req.body.deposit}', '${req.body.depositDate}' , '${req.body.gasStove}', '${req.body.spareRoom}','${req.body.additionalExtras}', '${req.body.additionalExtrasCost}' , '${req.body.bayNo}');
 
            UPDATE salesdata sd 
              INNER JOIN units u ON sd.unit = u.id     SET     sd.base_price = ${parseFloat(req.body.base_price)},    sd.contract_price = ${parseFloat(req.body.contract_price)}, sd.parking = ${parseFloat(req.body.parking)}, sd.extras = '${parseFloat(req.body.extras)}', sd.deductions = '${parseFloat(req.body.deductions)}', sd.sold = 1,  sd.actualsale_date = '${dateTime}' , sd.notes = '${req.body.notes}' WHERE u.unitName = '${req.body.unit}'`;

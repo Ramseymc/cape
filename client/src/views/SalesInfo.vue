@@ -66,15 +66,10 @@
                     </div>
 
                     <!-- Person Two Details -->
-                    <div style="display: flex; justify-content: flex-start"
-                    >
-                      <v-list-item-subtitle 
-                        :v-text="''"
-                      ></v-list-item-subtitle>
-                      <v-list-item-subtitle
-                        v-text="''"
-                      ></v-list-item-subtitle>
-                      
+                    <div style="display: flex; justify-content: flex-start">
+                      <v-list-item-subtitle :v-text="''"></v-list-item-subtitle>
+                      <v-list-item-subtitle v-text="''"></v-list-item-subtitle>
+
                       <v-list-item-subtitle
                         v-text="item.personTwoLastName"
                       ></v-list-item-subtitle>
@@ -148,6 +143,7 @@
       :dialog="clientDialog"
       :editData="salesEditData"
       @closeForm="closeClientForm"
+      :unitId="unitId"
     />
     <ClientFiles
       v-if="clientFilesData.length > 0"
@@ -166,7 +162,7 @@
 
 <script>
 import axios from "axios";
-let url = process.env.VUE_APP_BASEURL
+let url = process.env.VUE_APP_BASEURL;
 import ClientUpdate from "../components/ClientUpdate.vue";
 import ClientFiles from "../components/ClientFiles.vue";
 import SignOff from "../components/signOffOTP.vue";
@@ -194,7 +190,7 @@ export default {
       // url: "",
       salesEditData: [],
       search: "",
-
+      unitId: 0,
       personTwo1: "Person",
       personTwo2: "Two",
       // client Files dialog
@@ -231,9 +227,11 @@ export default {
   methods: {
     editItem(event) {
       let targetId = event.currentTarget.id; //Spot on
+      // console.log("id",event.currentTarget.id;)
       this.salesEditData = this.sales.filter((el) => {
         return el.id === parseInt(targetId);
       });
+      console.log("ZZZZZ@@", this.salesEditData);
       this.clientDialog = true;
     },
     async emailItem(event) {
@@ -282,6 +280,7 @@ export default {
             console.log("CLIENT-SIDE: RESPONSE DATA: ", response.data[0]);
 
             this.sales = response.data[0];
+            this.unitId = response.data[0].unitId;
             this.sales.forEach((el) => {
               el.fileOTPurl = `${this.url}/uploads/${el.fileOTP}`;
               // console.log("FileId", el.fileId);
@@ -321,9 +320,12 @@ export default {
     async deleteItem(event) {
       // get the id of clicked item (its element has an 'id' which we binded to it during the data call)
       let targetValue = event.currentTarget.id;
+      console.log("SALES CLIENT SIDE: " , this.sales)
       let data = {
         id: targetValue,
+        unit: this.sales[0].unit
       };
+      console.log(data)
       await axios({
         method: "post",
         url: `${url}/deleteSalesRecord`,
@@ -348,7 +350,7 @@ export default {
       this.clientFilesData = this.sales.filter((el) => {
         return el.id === parseInt(targetVal);
       });
-      console.log(  "File Dialog"    );
+      console.log("File Dialog");
       this.clientFileDialog = true;
     },
     async openSignOff(event) {
